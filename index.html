@@ -327,7 +327,7 @@
         degRadBtn.textContent = isDeg ? "DEG" : "RAD";
       });
 
-      // Optimized Global Event Delegation for Clicks
+      // Optimized Global Event Delegation for Clicks (excluding number and equal buttons handled inside actions)
       document.addEventListener("click", (e) => {
         if (isSoundLocked) return;
         const btn = e.target.closest("button");
@@ -336,7 +336,7 @@
         if (btn.classList.contains("btn-equal")) {
           equalSound.currentTime = 0;
           equalSound.play().catch(() => {});
-        } else {
+        } else if (!btn.classList.contains("btn-num")) {
           clickSound.currentTime = 0;
           clickSound.play().catch(() => {});
         }
@@ -367,7 +367,16 @@
       // Input Logic
       function appendValue(val) {
         if (isSoundLocked) return;
-        if (currentInput.length >= 40 && !shouldResetDisplay) return;
+        let parts = currentInput.split(/[\+\-\×\÷\^]/);
+        let currentNumber = parts[parts.length - 1];
+        if (currentNumber.length >= 40 && !shouldResetDisplay) return;
+
+        // Play click sound for number keys since global listener excludes them
+        if (val >= "0" && val <= "9") {
+          clickSound.currentTime = 0;
+          clickSound.play().catch(() => {});
+        }
+
         if (currentInput === "0" || shouldResetDisplay) {
           currentInput = val;
           shouldResetDisplay = false;
