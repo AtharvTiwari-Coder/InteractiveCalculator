@@ -1,118 +1,179 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scientific Calculator - Update Log</title>
     <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --border-color: #334155;
-        }
+      :root {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --text-main: #f8fafc;
+        --text-muted: #94a3b8;
+        --accent: #38bdf8;
+        --border-color: #334155;
+      }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            display: flex;
-            justify-content: center;
-            padding: 40px 20px;
-            margin: 0;
-            min-height: 100vh;
-        }
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-main);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        display: flex;
+        justify-content: center;
+        padding: 40px 20px;
+        margin: 0;
+        min-height: 100vh;
+      }
 
-        .changelog-container {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 32px;
-            width: 100%;
-            max-width: 600px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
+      .changelog-container {
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 20px;
+        padding: 32px;
+        width: 100%;
+        max-width: 600px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      }
 
-        h1 {
-            font-size: 1.8rem;
-            color: var(--accent);
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 12px;
-            margin-top: 0;
-            margin-bottom: 24px;
-        }
+      h1 {
+        font-size: 1.8rem;
+        color: var(--accent);
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 12px;
+        margin-top: 0;
+        margin-bottom: 24px;
+      }
 
-        ul {
-            padding-left: 20px;
-            line-height: 1.6;
-            color: var(--text-muted);
-        }
+      ul {
+        padding-left: 20px;
+        line-height: 1.6;
+        color: var(--text-muted);
+      }
 
-        li {
-            margin-bottom: 10px;
-        }
+      li {
+        margin-bottom: 10px;
+      }
 
-        strong {
-            color: var(--text-main);
-        }
+      strong {
+        color: var(--text-main);
+      }
 
-        code {
-            background-color: #090d16;
-            color: var(--accent);
-            padding: 2px 6px;
-            border-radius: 6px;
-            font-family: monospace;
-            font-size: 0.9rem;
-            border: 1px solid var(--border-color);
-        }
+      code {
+        background-color: #090d16;
+        color: var(--accent);
+        padding: 2px 6px;
+        border-radius: 6px;
+        font-family: monospace;
+        font-size: 0.9rem;
+        border: 1px solid var(--border-color);
+      }
 
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
+      .back-btn {
+        background: transparent;
+        border: 1px solid #334155;
+        color: var(--accent);
+        font-size: 0.9rem;
+        padding: 8px 14px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.15s ease;
+        margin-top: 30px;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
 
-        .back-link:hover {
-            text-decoration: underline;
-        }
+      .back-btn:hover {
+        background-color: #334155;
+        color: var(--text-main);
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
+  <body>
     <div class="changelog-container">
-        <h1>Update Log: v1.0</h1>
-        <ul>
-            <li><em><strong>Normal Scientific Calculator.</strong></em></li>
-            <li><strong>v1.0 Baseline:</strong> Initial single-file scientific calculator featuring full
-                trigonometric/logarithmic functions, keyboard support, and core evaluation engine.</li>
-        </ul>
+      <h1>Update Log: v1.0</h1>
+      <ul>
+        <li>
+          <em><strong>Normal Scientific Calculator.</strong></em>
+        </li>
+        <li>
+          <strong>v1.0 Baseline:</strong> Initial single-file scientific
+          calculator featuring full trigonometric/logarithmic functions,
+          keyboard support, and core evaluation engine.
+        </li>
+      </ul>
 
-        <h1 style="margin-top: 32px;">🚀 Update Log: v1.1</h1>
-        <ul>
-            <li><strong>Audio Feedback:</strong> Added sound effects for clicks and added <code>FahhSound</code>
-                triggered when an error appears etc.</li>
-            <li><strong>Layout Adjustment:</strong> Swapped the positions of the decimal point (<code>.</code>) and zero
-                (<code>0</code>) on the bottom row.</li>
-            <li><strong>Bug Fixes:</strong> Resolved browser audio decoding and loading issues.</li>
-        </ul>
+      <h1 style="margin-top: 32px">🚀 Update Log: v1.1</h1>
+      <ul>
+        <li>
+          <strong>Audio Feedback:</strong> Added sound effects for clicks and
+          added <code>FahhSound</code> triggered when an error appears.
+        </li>
+        <li>
+          <strong>Layout Adjustment:</strong> Swapped the positions of the
+          decimal point (<code>.</code>) and zero (<code>0</code>) on the bottom
+          row.
+        </li>
+        <li>
+          <strong>Bug Fixes:</strong> Resolved browser audio decoding and
+          loading issues.
+        </li>
+      </ul>
 
-        <h1 style="margin-top: 32px;">🚀 Update Log: v1.2</h1>
-        <ul>
-            <li><strong>New Feature:</strong> Added sound effect / BGM when the calculation result is Infinity.</li>
-            <li><strong>Bug Fixes:</strong> Resolved additional bugs regarding <code>FahhSound</code> not working
-                properly.</li>
-        </ul>
+      <h1 style="margin-top: 32px">🚀 Update Log: v1.2</h1>
+      <ul>
+        <li>
+          <strong>New Feature:</strong> Added sound effect / BGM
+          (<code>MathsEditSound</code>) when the calculation result is
+          Infinity/-Infinity.
+        </li>
+        <li>
+          <strong>Easter Egg:</strong> Added custom
+          <code>U.S. POLO</code> result trigger for the
+          <code>67+69+420×17÷9</code> calculation sequence.
+        </li>
+        <li>
+          <strong>Performance & UI:</strong> Fixed bugs and made it all device
+          optimized for faster typing making it lag even less, close to zero,
+          capped input segments at 40 digits, and added operator layout updates.
+        </li>
+        <li>
+          <strong>Bug Fixes:</strong> Resolved additional bugs regarding
+          <code>FahhSound</code> not working properly.
+        </li>
+      </ul>
 
-        <a href="index.html" class="back-link">&larr; Back to Calculator</a>
+      <h1 style="margin-top: 32px">🚀 Update Log: v1.2.1</h1>
+      <ul>
+        <li>
+          <strong>UI Enhancement:</strong> Updated the navigation return
+          mechanism to a dedicated interactive button layout.
+        </li>
+        <li>
+          <strong>Audio Integration:</strong> Configured the return action
+          button to seamlessly trigger Sound Effect prior to navigation.
+        </li>
+      </ul>
+
+      <button class="back-btn" onclick="goBack()">
+        &larr; Back to Calculator
+      </button>
     </div>
 
-</body>
+    <script>
+      const equalSound = new Audio("EqualSound.mp3");
 
+      function goBack() {
+        equalSound.currentTime = 0;
+        equalSound
+          .play()
+          .catch((err) => console.log("Equal sound prevented:", err));
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 150);
+      }
+    </script>
+  </body>
 </html>
