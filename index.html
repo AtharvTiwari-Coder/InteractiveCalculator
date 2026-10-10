@@ -258,7 +258,7 @@
     const equalSound = new Audio('EqualSound.mp3');
     const fahhSound = new Audio('FahhSound.mp3');
 
-    // Web Audio API setup to amplify FahhSound to 300% volume
+    // Web Audio API setup to amplify FahhSound to 400% volume
     let audioCtx = null;
     let fahhGain = null;
 
@@ -267,7 +267,7 @@
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const source = audioCtx.createMediaElementSource(fahhSound);
         fahhGain = audioCtx.createGain();
-        fahhGain.gain.value = 3.0; // 300% volume boost
+        fahhGain.gain.value = 4.0; // 400% volume boost
         source.connect(fahhGain);
         fahhGain.connect(audioCtx.destination);
       }
