@@ -257,17 +257,23 @@
     const clickSound = new Audio('ClickSound.mp3');
     const equalSound = new Audio('EqualSound.mp3');
     const fahhSound = new Audio('FahhSound.mp3');
+    const mathsEditSound = new Audio('MathsEditSound.mp3');
+    mathsEditSound.volume = 1.0;
 
-    // Web Audio API setup to amplify FahhSound to 400% volume
+    // Sound lock flag to block other sounds and inputs while mathsEditSound is playing
+    let isSoundLocked = false;
+
+    // Web Audio API setup to amplify FahhSound to 300% volume
     let audioCtx = null;
     let fahhGain = null;
 
     function playFahhLoud() {
+      if (isSoundLocked) return;
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const source = audioCtx.createMediaElementSource(fahhSound);
         fahhGain = audioCtx.createGain();
-        fahhGain.gain.value = 4.0; // 400% volume boost
+        fahhGain.gain.value = 3.0; // 300% volume boost
         source.connect(fahhGain);
         fahhGain.connect(audioCtx.destination);
       }
@@ -279,6 +285,7 @@
     }
 
     function openUpdateLog() {
+      if (isSoundLocked) return;
       // Play equal sound effect on click
       equalSound.currentTime = 0;
       equalSound.play().catch((err) => console.log("Equal sound prevented:", err));
@@ -297,12 +304,14 @@
     let shouldResetDisplay = false;
 
     degRadBtn.addEventListener('click', () => {
+      if (isSoundLocked) return;
       isDeg = !isDeg;
       degRadBtn.textContent = isDeg ? 'DEG' : 'RAD';
     });
 
     // Global click listener for sound effects (excludes the Update Log button since it has a custom trigger)
     document.addEventListener('click', (e) => {
+      if (isSoundLocked) return;
       if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('update-log-btn')) {
         if (e.target.classList.contains('btn-equal')) {
           equalSound.currentTime = 0;
@@ -320,6 +329,7 @@
     }
 
     function appendValue(val) {
+      if (isSoundLocked) return;
       if (currentInput === '0' || shouldResetDisplay) {
         currentInput = val;
         shouldResetDisplay = false;
@@ -330,6 +340,7 @@
     }
 
     function appendOp(op) {
+      if (isSoundLocked) return;
       if (shouldResetDisplay) shouldResetDisplay = false;
       const lastChar = currentInput.slice(-1);
       if (['+', '-', '×', '÷', '^'].includes(lastChar)) {
@@ -341,6 +352,7 @@
     }
 
     function appendFunc(func) {
+      if (isSoundLocked) return;
       if (currentInput === '0' || shouldResetDisplay) {
         currentInput = func + '(';
         shouldResetDisplay = false;
@@ -351,6 +363,7 @@
     }
 
     function clearAll() {
+      if (isSoundLocked) return;
       currentInput = '0';
       history = '';
       shouldResetDisplay = false;
@@ -358,6 +371,7 @@
     }
 
     function deleteChar() {
+      if (isSoundLocked) return;
       if (shouldResetDisplay) {
         clearAll();
         return;
@@ -371,6 +385,7 @@
     }
 
     function calculate() {
+      if (isSoundLocked) return;
       try {
         let expression = currentInput;
         history = currentInput + ' =';
@@ -392,9 +407,22 @@
         let result = Function('"use strict"; return (' + expression + ')')();
 
         if (typeof result === 'number' && !isNaN(result)) {
-          // Round floating point inaccuracies
-          result = Math.round(result * 1e10) / 1e10;
-          currentInput = result.toString();
+          if (!isFinite(result)) {
+            currentInput = result.toString();
+            isSoundLocked = true;
+            mathsEditSound.currentTime = 0;
+            mathsEditSound.play().catch((err) => {
+              console.log("Maths edit sound prevented:", err);
+              isSoundLocked = false;
+            });
+            mathsEditSound.onended = () => {
+              isSoundLocked = false;
+            };
+          } else {
+            // Round floating point inaccuracies
+            result = Math.round(result * 1e10) / 1e10;
+            currentInput = result.toString();
+          }
         } else {
           currentInput = 'Error';
           playFahhLoud();
@@ -410,6 +438,7 @@
 
     // Keyboard navigation support
     document.addEventListener('keydown', (e) => {
+      if (isSoundLocked) return;
       if ((e.key >= '0' && e.key <= '9') || e.key === '.') appendValue(e.key);
       if (e.key === '+') appendOp('+');
       if (e.key === '-') appendOp('-');
