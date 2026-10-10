@@ -165,6 +165,28 @@
     .span-2 {
       grid-column: span 2;
     }
+
+    .footer-bar {
+      display: flex;
+      justify-content: flex-start;
+      margin-top: -4px;
+    }
+
+    .update-log-btn {
+      background: transparent;
+      border: 1px solid #334155;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      padding: 4px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .update-log-btn:hover {
+      background-color: #334155;
+      color: var(--text-main);
+    }
   </style>
 </head>
 
@@ -223,6 +245,11 @@
       <button class="btn-op" onclick="appendOp('+')">+</button>
       <button class="btn-equal" onclick="calculate()">=</button>
     </div>
+
+    <!-- Footer Bar with Update Log Button -->
+    <div class="footer-bar">
+      <button class="update-log-btn" onclick="openUpdateLog()">Update Log</button>
+    </div>
   </div>
 
   <script>
@@ -251,6 +278,15 @@
       fahhSound.play().catch((err) => console.log("Error sound prevented:", err));
     }
 
+    function openUpdateLog() {
+      // Play equal sound effect on click
+      equalSound.currentTime = 0;
+      equalSound.play().catch((err) => console.log("Equal sound prevented:", err));
+
+      // Open styled changelog page in a new tab
+      window.open('changelog.html', '_blank');
+    }
+
     let mainDisplay = document.getElementById('mainDisplay');
     let historyDisplay = document.getElementById('historyDisplay');
     let degRadBtn = document.getElementById('degRadBtn');
@@ -265,9 +301,9 @@
       degRadBtn.textContent = isDeg ? 'DEG' : 'RAD';
     });
 
-    // Global click listener for sound effects
+    // Global click listener for sound effects (excludes the Update Log button since it has a custom trigger)
     document.addEventListener('click', (e) => {
-      if (e.target.tagName === 'BUTTON') {
+      if (e.target.tagName === 'BUTTON' && !e.target.classList.contains('update-log-btn')) {
         if (e.target.classList.contains('btn-equal')) {
           equalSound.currentTime = 0;
           equalSound.play().catch((err) => console.log("Equal sound prevented:", err));
