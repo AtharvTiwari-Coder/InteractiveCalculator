@@ -1,11 +1,11 @@
 # Update Log: v1.0
 * ***Normal Scientific Calculator.***
+* **v1.0 Baseline:** Initial single-file scientific calculator featuring full trigonometric/logarithmic functions, keyboard support, and core evaluation engine.
 
 # 🚀 Update Log: v1.1
-* **Audio Feedback:** Added sound effects for clicks etc.
+* **Audio Feedback:** Added sound effects for clicks and added `FahhSound` triggered when an error appears etc.
 * **Layout Adjustment:** Swapped the positions of the decimal point (`.`) and zero (`0`) on the bottom row.
 * **Bug Fixes:** Resolved browser audio decoding and loading issues.
-* **v1.0 Baseline:** Initial single-file scientific calculator featuring full trigonometric/logarithmic functions, keyboard support, and core evaluation engine.
 
 # 🚀 Update Log: v1.2
 * **New Feature:** Added sound effect / BGM when the calculation result is Infinity.
