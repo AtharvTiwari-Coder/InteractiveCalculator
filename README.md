@@ -24,6 +24,7 @@
 * **Input Limit:** Implemented sound suppression once the 60-digit input segment limit is reached.
 
 ## 🚀 Update Log: v1.2.3
+* **Keyboard Shortcut:** Added `Ctrl + Backspace` shortcut mapped to `AC` functionality, complete with synced button animations and audio feedback.
 * **Visual Audio Sync:** Synchronized both on-screen buttons and physical keyboard inputs to trigger red mechanical vibration feedback during active audio events.
 * **Performance & Versatility:** Reverted max input segment length to 16 digits and optimized performance specifically for mobile devices.
 * **Secret Content Updates:** Included custom visual results such as the U.S. Polo text branding and high-voltage electrical zap effects, while silently removing a previous secret calculation sequence.
