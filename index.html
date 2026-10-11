@@ -70,6 +70,7 @@
         border-radius: 12px;
         cursor: pointer;
         font-weight: 600;
+        transition: background-color 0.15s ease;
       }
 
       .display-container {
@@ -83,6 +84,7 @@
         height: 120px;
         border: 1px solid #334155;
         overflow: hidden;
+        position: relative;
       }
 
       .history {
@@ -116,6 +118,39 @@
         width: 100%;
       }
 
+      @keyframes staticGlitch {
+        0% {
+          transform: translate(0, 0);
+          filter: drop-shadow(0 0 2px #facc15);
+        }
+        20% {
+          transform: translate(-3px, 2px);
+          filter: drop-shadow(0 0 8px #fef08a);
+          color: #facc15;
+        }
+        40% {
+          transform: translate(3px, -2px);
+          filter: drop-shadow(0 0 4px #ffffff);
+        }
+        60% {
+          transform: translate(-2px, -1px);
+          filter: drop-shadow(0 0 10px #facc15);
+          color: #fef08a;
+        }
+        80% {
+          transform: translate(2px, 3px);
+          filter: drop-shadow(0 0 5px #ffffff);
+        }
+        100% {
+          transform: translate(0, 0);
+          filter: drop-shadow(0 0 2px #facc15);
+        }
+      }
+
+      .zap-glitch {
+        animation: staticGlitch 0.1s ease infinite;
+      }
+
       .buttons-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -144,47 +179,34 @@
       .btn-num {
         background-color: var(--btn-num);
       }
-
       .btn-num:hover {
         background-color: var(--btn-num-hover);
       }
-
       .btn-op {
         background-color: var(--btn-op);
       }
-
       .btn-op:hover {
         background-color: var(--btn-op-hover);
       }
-
       .btn-func {
         background-color: var(--btn-func);
         font-size: 0.95rem;
       }
-
       .btn-func:hover {
         background-color: var(--btn-func-hover);
       }
-
       .btn-action {
         background-color: var(--btn-action);
       }
-
       .btn-action:hover {
         background-color: var(--btn-action-hover);
       }
-
       .btn-equal {
         background-color: var(--btn-equal);
         grid-column: span 2;
       }
-
       .btn-equal:hover {
         background-color: var(--btn-equal-hover);
-      }
-
-      .span-2 {
-        grid-column: span 2;
       }
 
       .footer-bar {
@@ -224,49 +246,42 @@
       </div>
 
       <div class="buttons-grid">
-        <!-- Row 1 -->
         <button class="btn-func" onclick="appendFunc('sin')">sin</button>
         <button class="btn-func" onclick="appendFunc('cos')">cos</button>
         <button class="btn-func" onclick="appendFunc('tan')">tan</button>
         <button class="btn-action" onclick="clearAll()">AC</button>
         <button class="btn-action" onclick="deleteChar()">DEL</button>
 
-        <!-- Row 2 -->
         <button class="btn-func" onclick="appendFunc('sqrt')">√</button>
         <button class="btn-func" onclick="appendOp('^')">^</button>
         <button class="btn-func" onclick="appendFunc('log')">log</button>
         <button class="btn-func" onclick="appendValue('(')">(</button>
         <button class="btn-func" onclick="appendValue(')')">)</button>
 
-        <!-- Row 3 -->
         <button class="btn-func" onclick="appendValue('π')">π</button>
         <button class="btn-num" onclick="appendValue('7')">7</button>
         <button class="btn-num" onclick="appendValue('8')">8</button>
         <button class="btn-num" onclick="appendValue('9')">9</button>
         <button class="btn-op" onclick="appendOp('+')">+</button>
 
-        <!-- Row 4 -->
         <button class="btn-func" onclick="appendValue('e')">e</button>
         <button class="btn-num" onclick="appendValue('4')">4</button>
         <button class="btn-num" onclick="appendValue('5')">5</button>
         <button class="btn-num" onclick="appendValue('6')">6</button>
         <button class="btn-op" onclick="appendOp('×')">×</button>
 
-        <!-- Row 5 -->
         <button class="btn-func" onclick="appendFunc('ln')">ln</button>
         <button class="btn-num" onclick="appendValue('1')">1</button>
         <button class="btn-num" onclick="appendValue('2')">2</button>
         <button class="btn-num" onclick="appendValue('3')">3</button>
         <button class="btn-op" onclick="appendOp('-')">-</button>
 
-        <!-- Row 6 -->
         <button class="btn-num" onclick="appendValue('.')">.</button>
         <button class="btn-num" onclick="appendValue('0')">0</button>
         <button class="btn-op" onclick="appendOp('÷')">÷</button>
         <button class="btn-equal" onclick="calculate()">=</button>
       </div>
 
-      <!-- Footer Bar -->
       <div class="footer-bar">
         <button class="update-log-btn" onclick="openUpdateLog()">
           Update Log
@@ -275,23 +290,41 @@
     </div>
 
     <script>
-      // Audio Setup
       const clickSound = new Audio("ClickSound.mp3");
       const equalSound = new Audio("EqualSound.mp3");
       const fahhSound = new Audio("FahhSound.mp3");
       const mathsEditSound = new Audio("MathsEditSound.mp3");
+      const zapSound = new Audio("ZapSound.mp3");
       mathsEditSound.volume = 1.0;
+      zapSound.volume = 1.0;
 
       let isSoundLocked = false;
       let audioCtx = null;
-      let fahhGain = null;
+
+      function resetAllButtonColors() {
+        document.querySelectorAll(".buttons-grid button").forEach((b) => {
+          b.style.backgroundColor = "";
+        });
+        degRadBtn.style.backgroundColor = "";
+      }
+
+      mathsEditSound.onended = () => {
+        isSoundLocked = false;
+        resetAllButtonColors();
+      };
+
+      zapSound.onended = () => {
+        isSoundLocked = false;
+        resetAllButtonColors();
+        mainDisplay.classList.remove("zap-glitch");
+      };
 
       function playFahhLoud() {
         if (isSoundLocked) return;
         if (!audioCtx) {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
           const source = audioCtx.createMediaElementSource(fahhSound);
-          fahhGain = audioCtx.createGain();
+          let fahhGain = audioCtx.createGain();
           fahhGain.gain.value = 3.0;
           source.connect(fahhGain);
           fahhGain.connect(audioCtx.destination);
@@ -310,7 +343,6 @@
         window.open("changelog.html", "_blank");
       }
 
-      // State Variables
       let mainDisplay = document.getElementById("mainDisplay");
       let historyDisplay = document.getElementById("historyDisplay");
       let degRadBtn = document.getElementById("degRadBtn");
@@ -322,16 +354,60 @@
       let renderScheduled = false;
 
       degRadBtn.addEventListener("click", () => {
+        const isMathsEditPlaying =
+          !mathsEditSound.paused &&
+          mathsEditSound.currentTime > 0 &&
+          !mathsEditSound.ended;
+        const isZapPlaying =
+          !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
+        if (isMathsEditPlaying || isZapPlaying) {
+          degRadBtn.style.backgroundColor = "#ef4444";
+        }
         if (isSoundLocked) return;
         isDeg = !isDeg;
         degRadBtn.textContent = isDeg ? "DEG" : "RAD";
       });
 
-      // Optimized Global Event Delegation for Clicks (excluding number and equal buttons handled inside actions)
+      function triggerButtonVisuals(btn) {
+        if (!btn) return;
+        btn.style.transform = "scale(0.96)";
+        setTimeout(() => {
+          btn.style.transform = "";
+        }, 100);
+
+        const isMathsEditPlaying =
+          !mathsEditSound.paused &&
+          mathsEditSound.currentTime > 0 &&
+          !mathsEditSound.ended;
+        const isZapPlaying =
+          !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
+        if (isMathsEditPlaying || isZapPlaying) {
+          btn.style.backgroundColor = "#ef4444";
+        }
+      }
+
+      function findButtonByKey(key) {
+        const buttons = document.querySelectorAll(".buttons-grid button");
+        for (let btn of buttons) {
+          let text = btn.textContent.trim();
+          if ((key === "Enter" || key === "=") && text === "=") return btn;
+          if ((key === "*" || key === "x" || key === "X") && text === "×")
+            return btn;
+          if (key === "/" && text === "÷") return btn;
+          if (key === "Backspace" && text === "DEL") return btn;
+          if (key === "Escape" && text === "AC") return btn;
+          if (text === key) return btn;
+        }
+        return null;
+      }
+
       document.addEventListener("click", (e) => {
-        if (isSoundLocked) return;
         const btn = e.target.closest("button");
         if (!btn || btn.classList.contains("update-log-btn")) return;
+
+        triggerButtonVisuals(btn);
+
+        if (isSoundLocked) return;
 
         if (btn.classList.contains("btn-equal")) {
           equalSound.currentTime = 0;
@@ -342,11 +418,9 @@
         }
       });
 
-      // High-Performance Font Scaling & Rendering using requestAnimationFrame
       function adjustFontSize() {
         let fontSize = 2.2;
         mainDisplay.style.fontSize = fontSize + "rem";
-
         while (mainDisplay.scrollHeight > 70 && fontSize > 0.7) {
           fontSize -= 0.1;
           mainDisplay.style.fontSize = fontSize + "rem";
@@ -357,21 +431,27 @@
         if (renderScheduled) return;
         renderScheduled = true;
         requestAnimationFrame(() => {
-          mainDisplay.textContent = currentInput;
+          if (
+            currentInput.includes("U.S. POLO") ||
+            currentInput.includes("TERMINAL") ||
+            currentInput.includes("ZAP")
+          ) {
+            mainDisplay.innerHTML = currentInput;
+          } else {
+            mainDisplay.textContent = currentInput;
+          }
           historyDisplay.textContent = history;
           adjustFontSize();
           renderScheduled = false;
         });
       }
 
-      // Input Logic
       function appendValue(val) {
         if (isSoundLocked) return;
         let parts = currentInput.split(/[\+\-\×\÷\^]/);
         let currentNumber = parts[parts.length - 1];
-        if (currentNumber.length >= 40 && !shouldResetDisplay) return;
+        if (currentNumber.length >= 60 && !shouldResetDisplay) return;
 
-        // Play click sound for number keys since global listener excludes them
         if (val >= "0" && val <= "9") {
           clickSound.currentTime = 0;
           clickSound.play().catch(() => {});
@@ -388,7 +468,7 @@
 
       function appendOp(op) {
         if (isSoundLocked) return;
-        if (currentInput.length >= 40 && !shouldResetDisplay) return;
+        if (currentInput.length >= 60 && !shouldResetDisplay) return;
         if (shouldResetDisplay) shouldResetDisplay = false;
         const lastChar = currentInput.slice(-1);
         if (["+", "-", "×", "÷", "^"].includes(lastChar)) {
@@ -401,7 +481,7 @@
 
       function appendFunc(func) {
         if (isSoundLocked) return;
-        if (currentInput.length + func.length + 1 >= 40 && !shouldResetDisplay)
+        if (currentInput.length + func.length + 1 >= 60 && !shouldResetDisplay)
           return;
         if (currentInput === "0" || shouldResetDisplay) {
           currentInput = func + "(";
@@ -417,6 +497,7 @@
         currentInput = "0";
         history = "";
         shouldResetDisplay = false;
+        mainDisplay.classList.remove("zap-glitch");
         updateDisplay();
       }
 
@@ -434,7 +515,6 @@
         updateDisplay();
       }
 
-      // Calculation Engine
       function calculate() {
         if (isSoundLocked) return;
         try {
@@ -445,20 +525,45 @@
             .replace(/\s+/g, "")
             .replace(/×/g, "*")
             .replace(/÷/g, "/");
+
           if (normalizedExpr === "67+69+420*17/9") {
             let calcResult =
               Math.round((67 + 69 + (420 * 17) / 9) * 1e10) / 1e10;
-            currentInput = `U.S. POLO (${calcResult})`;
+            currentInput = `<span style="font-family: 'Georgia', serif; font-weight: bold; font-style: italic; letter-spacing: 1px; color: #f43f5e;">U.S. POLO (${calcResult})</span>`;
             shouldResetDisplay = true;
             updateDisplay();
             return;
           }
 
-          let expression = rawExpression;
-          expression = expression
+          if (normalizedExpr === "e^pi-pi" || normalizedExpr === "e^π-π") {
+            let calcResult =
+              Math.round((Math.E ** Math.PI - Math.PI) * 1e10) / 1e10;
+            currentInput = `<span style="font-family: monospace; font-weight: bold; color: #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.6);">TERMINAL: ${calcResult}</span>`;
+            shouldResetDisplay = true;
+            updateDisplay();
+            return;
+          }
+
+          if (
+            normalizedExpr === "1/0.00000001" ||
+            normalizedExpr === "1/1e-8"
+          ) {
+            currentInput = `<span style="color: #facc15; font-weight: bold; text-shadow: 0 0 8px #fef08a;">⚡ ZAP! 100,000,000</span>`;
+            isSoundLocked = true;
+            mainDisplay.classList.add("zap-glitch");
+            zapSound.currentTime = 0;
+            zapSound.play().catch(() => {
+              isSoundLocked = false;
+              mainDisplay.classList.remove("zap-glitch");
+            });
+            shouldResetDisplay = true;
+            updateDisplay();
+            return;
+          }
+
+          let expression = rawExpression
             .replace(/π/g, "Math.PI")
-            .replace(/e/g, "Math.E");
-          expression = expression
+            .replace(/e/g, "Math.E")
             .replace(/×/g, "*")
             .replace(/÷/g, "/")
             .replace(/\^/g, "**");
@@ -484,15 +589,12 @@
 
           if (typeof result === "number" && !isNaN(result)) {
             if (!isFinite(result)) {
-              currentInput = result.toString();
+              currentInput = result > 0 ? "Infinity" : "-Infinity";
               isSoundLocked = true;
               mathsEditSound.currentTime = 0;
               mathsEditSound.play().catch(() => {
                 isSoundLocked = false;
               });
-              mathsEditSound.onended = () => {
-                isSoundLocked = false;
-              };
             } else {
               result = Math.round(result * 1e10) / 1e10;
               currentInput = result.toString();
@@ -510,19 +612,13 @@
         updateDisplay();
       }
 
-      // Keyboard Controls
       document.addEventListener("keydown", (e) => {
         if (isSoundLocked) return;
-        if ((e.key >= "0" && e.key <= "9") || e.key === ".") appendValue(e.key);
-        if (e.key === "+") appendOp("+");
-        if (e.key === "-") appendOp("-");
-        if (e.key === "*") appendOp("×");
-        if (e.key === "/") appendOp("÷");
-        if (e.key === "^") appendOp("^");
-        if (e.key === "(" || e.key === ")") appendValue(e.key);
-        if (e.key === "Enter" || e.key === "=") calculate();
-        if (e.key === "Backspace") deleteChar();
-        if (e.key === "Escape") clearAll();
+        let matchedBtn = findButtonByKey(e.key);
+        if (matchedBtn) {
+          matchedBtn.click();
+          e.preventDefault();
+        }
       });
     </script>
   </body>
