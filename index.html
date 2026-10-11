@@ -368,7 +368,6 @@
           if (key === "+" && text === "+") return btn;
           if (key === "-" && text === "-") return btn;
           if (key === "Backspace" && text === "DEL") return btn;
-          if (key === "Escape" && text === "AC") return btn;
           if (text === key) return btn;
         }
         return null;
@@ -564,6 +563,19 @@
       }
 
       document.addEventListener("keydown", (e) => {
+        // Ctrl + Backspace -> AC (All Clear)
+        if (e.ctrlKey && e.key === "Backspace") {
+          let acBtn = Array.from(
+            document.querySelectorAll(".buttons-grid button"),
+          ).find((b) => b.textContent.trim() === "AC");
+          if (acBtn) {
+            triggerButtonVisuals(acBtn);
+          }
+          clearAll();
+          e.preventDefault();
+          return;
+        }
+
         let btn = findButtonByKey(e.key);
         if (btn) {
           triggerButtonVisuals(btn);
