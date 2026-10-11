@@ -119,32 +119,12 @@
       }
 
       @keyframes staticGlitch {
-        0% {
-          transform: translate(0, 0);
-          filter: drop-shadow(0 0 2px #facc15);
-        }
-        20% {
-          transform: translate(-3px, 2px);
-          filter: drop-shadow(0 0 8px #fef08a);
-          color: #facc15;
-        }
-        40% {
-          transform: translate(3px, -2px);
-          filter: drop-shadow(0 0 4px #ffffff);
-        }
-        60% {
-          transform: translate(-2px, -1px);
-          filter: drop-shadow(0 0 10px #facc15);
-          color: #fef08a;
-        }
-        80% {
-          transform: translate(2px, 3px);
-          filter: drop-shadow(0 0 5px #ffffff);
-        }
-        100% {
-          transform: translate(0, 0);
-          filter: drop-shadow(0 0 2px #facc15);
-        }
+        0% { transform: translate(0, 0); filter: drop-shadow(0 0 2px #facc15); }
+        20% { transform: translate(-3px, 2px); filter: drop-shadow(0 0 8px #fef08a); color: #facc15; }
+        40% { transform: translate(3px, -2px); filter: drop-shadow(0 0 4px #ffffff); }
+        60% { transform: translate(-2px, -1px); filter: drop-shadow(0 0 10px #facc15); color: #fef08a; }
+        80% { transform: translate(2px, 3px); filter: drop-shadow(0 0 5px #ffffff); }
+        100% { transform: translate(0, 0); filter: drop-shadow(0 0 2px #facc15); }
       }
 
       .zap-glitch {
@@ -176,38 +156,16 @@
         transform: scale(0.96);
       }
 
-      .btn-num {
-        background-color: var(--btn-num);
-      }
-      .btn-num:hover {
-        background-color: var(--btn-num-hover);
-      }
-      .btn-op {
-        background-color: var(--btn-op);
-      }
-      .btn-op:hover {
-        background-color: var(--btn-op-hover);
-      }
-      .btn-func {
-        background-color: var(--btn-func);
-        font-size: 0.95rem;
-      }
-      .btn-func:hover {
-        background-color: var(--btn-func-hover);
-      }
-      .btn-action {
-        background-color: var(--btn-action);
-      }
-      .btn-action:hover {
-        background-color: var(--btn-action-hover);
-      }
-      .btn-equal {
-        background-color: var(--btn-equal);
-        grid-column: span 2;
-      }
-      .btn-equal:hover {
-        background-color: var(--btn-equal-hover);
-      }
+      .btn-num { background-color: var(--btn-num); }
+      .btn-num:hover { background-color: var(--btn-num-hover); }
+      .btn-op { background-color: var(--btn-op); }
+      .btn-op:hover { background-color: var(--btn-op-hover); }
+      .btn-func { background-color: var(--btn-func); font-size: 0.95rem; }
+      .btn-func:hover { background-color: var(--btn-func-hover); }
+      .btn-action { background-color: var(--btn-action); }
+      .btn-action:hover { background-color: var(--btn-action-hover); }
+      .btn-equal { background-color: var(--btn-equal); grid-column: span 2; }
+      .btn-equal:hover { background-color: var(--btn-equal-hover); }
 
       .footer-bar {
         display: flex;
@@ -354,12 +312,8 @@
       let renderScheduled = false;
 
       degRadBtn.addEventListener("click", () => {
-        const isMathsEditPlaying =
-          !mathsEditSound.paused &&
-          mathsEditSound.currentTime > 0 &&
-          !mathsEditSound.ended;
-        const isZapPlaying =
-          !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
+        const isMathsEditPlaying = !mathsEditSound.paused && mathsEditSound.currentTime > 0 && !mathsEditSound.ended;
+        const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
         if (isMathsEditPlaying || isZapPlaying) {
           degRadBtn.style.backgroundColor = "#ef4444";
         }
@@ -375,12 +329,8 @@
           btn.style.transform = "";
         }, 100);
 
-        const isMathsEditPlaying =
-          !mathsEditSound.paused &&
-          mathsEditSound.currentTime > 0 &&
-          !mathsEditSound.ended;
-        const isZapPlaying =
-          !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
+        const isMathsEditPlaying = !mathsEditSound.paused && mathsEditSound.currentTime > 0 && !mathsEditSound.ended;
+        const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
         if (isMathsEditPlaying || isZapPlaying) {
           btn.style.backgroundColor = "#ef4444";
         }
@@ -391,8 +341,7 @@
         for (let btn of buttons) {
           let text = btn.textContent.trim();
           if ((key === "Enter" || key === "=") && text === "=") return btn;
-          if ((key === "*" || key === "x" || key === "X") && text === "×")
-            return btn;
+          if ((key === "*" || key === "x" || key === "X") && text === "×") return btn;
           if (key === "/" && text === "÷") return btn;
           if (key === "Backspace" && text === "DEL") return btn;
           if (key === "Escape" && text === "AC") return btn;
@@ -431,11 +380,7 @@
         if (renderScheduled) return;
         renderScheduled = true;
         requestAnimationFrame(() => {
-          if (
-            currentInput.includes("U.S. POLO") ||
-            currentInput.includes("TERMINAL") ||
-            currentInput.includes("ZAP")
-          ) {
+          if (currentInput.includes("U.S. POLO") || currentInput.includes("TERMINAL") || currentInput.includes("ZAP")) {
             mainDisplay.innerHTML = currentInput;
           } else {
             mainDisplay.textContent = currentInput;
@@ -517,6 +462,16 @@
 
       function calculate() {
         if (isSoundLocked) return;
+
+        // If a result is already showing and user presses '=', reset to 0 instead of re-evaluating
+        if (shouldResetDisplay) {
+          currentInput = "0";
+          history = "";
+          shouldResetDisplay = false;
+          updateDisplay();
+          return;
+        }
+
         try {
           let rawExpression = currentInput;
           history = currentInput + " =";
@@ -536,18 +491,14 @@
           }
 
           if (normalizedExpr === "e^pi-pi" || normalizedExpr === "e^π-π") {
-            let calcResult =
-              Math.round((Math.E ** Math.PI - Math.PI) * 1e10) / 1e10;
+            let calcResult = Math.round((Math.E**Math.PI - Math.PI) * 1e10) / 1e10;
             currentInput = `<span style="font-family: monospace; font-weight: bold; color: #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.6);">TERMINAL: ${calcResult}</span>`;
             shouldResetDisplay = true;
             updateDisplay();
             return;
           }
 
-          if (
-            normalizedExpr === "1/0.00000001" ||
-            normalizedExpr === "1/1e-8"
-          ) {
+          if (normalizedExpr === "1/0.00000001" || normalizedExpr === "1/1e-8") {
             currentInput = `<span style="color: #facc15; font-weight: bold; text-shadow: 0 0 8px #fef08a;">⚡ ZAP! 100,000,000</span>`;
             isSoundLocked = true;
             mainDisplay.classList.add("zap-glitch");
