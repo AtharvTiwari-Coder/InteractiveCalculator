@@ -131,6 +131,17 @@
         animation: staticGlitch 0.1s ease infinite;
       }
 
+      /* Red Pulsing Animation for active red buttons */
+      @keyframes redPulse {
+        0% { transform: scale(1); background-color: #ef4444; }
+        50% { transform: scale(1.04); background-color: #dc2626; box-shadow: 0 0 12px rgba(239, 68, 68, 0.8); }
+        100% { transform: scale(1); background-color: #ef4444; }
+      }
+
+      .red-vibrate {
+        animation: redPulse 0.4s ease infinite;
+      }
+
       .buttons-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -264,9 +275,12 @@
       function resetAllButtonColors() {
         document.querySelectorAll(".buttons-grid button").forEach((b) => {
           b.style.backgroundColor = "";
+          b.classList.remove("red-vibrate");
         });
         degRadBtn.style.backgroundColor = "";
+        degRadBtn.classList.remove("red-vibrate");
         updateLogBtn.style.backgroundColor = "";
+        updateLogBtn.classList.remove("red-vibrate");
       }
 
       mathsEditSound.onended = () => {
@@ -319,7 +333,9 @@
         const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
         if (isMathsEditPlaying || isZapPlaying) {
           degRadBtn.style.backgroundColor = "#ef4444";
+          degRadBtn.classList.add("red-vibrate");
           updateLogBtn.style.backgroundColor = "#ef4444";
+          updateLogBtn.classList.add("red-vibrate");
         }
         if (isSoundLocked) return;
         isDeg = !isDeg;
@@ -337,7 +353,11 @@
         const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
         if (isMathsEditPlaying || isZapPlaying) {
           btn.style.backgroundColor = "#ef4444";
+          btn.classList.add("red-vibrate");
           updateLogBtn.style.backgroundColor = "#ef4444";
+          updateLogBtn.classList.add("red-vibrate");
+          degRadBtn.style.backgroundColor = "#ef4444";
+          degRadBtn.classList.add("red-vibrate");
         }
       }
 
@@ -563,20 +583,3 @@
         } catch (err) {
           currentInput = "Error";
           playFahhLoud();
-        }
-
-        shouldResetDisplay = true;
-        updateDisplay();
-      }
-
-      document.addEventListener("keydown", (e) => {
-        if (isSoundLocked) return;
-        let matchedBtn = findButtonByKey(e.key);
-        if (matchedBtn) {
-          matchedBtn.click();
-          e.preventDefault();
-        }
-      });
-    </script>
-  </body>
-</html>
