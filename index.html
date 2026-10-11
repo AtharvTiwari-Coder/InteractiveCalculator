@@ -6,22 +6,16 @@
     <title>Scientific Calculator</title>
     <style>
       :root {
-        --bg-color: #0f172a;
-        --card-bg: #1e293b;
-        --display-bg: #090d16;
-        --text-main: #f8fafc;
-        --text-muted: #94a3b8;
-        --btn-num: #334155;
-        --btn-num-hover: #475569;
-        --btn-op: #0284c7;
-        --btn-op-hover: #0369a1;
-        --btn-func: #475569;
-        --btn-func-hover: #64748b;
-        --btn-action: #e11d48;
-        --btn-action-hover: #be123c;
-        --btn-equal: #16a34a;
-        --btn-equal-hover: #15803d;
-        --accent: #38bdf8;
+        --bg: #0f172a;
+        --card: #1e293b;
+        --display: #090d16;
+        --text: #f8fafc;
+        --muted: #94a3b8;
+        --num: #334155;
+        --op: #0284c7;
+        --func: #475569;
+        --action: #e11d48;
+        --equal: #16a34a;
       }
 
       * {
@@ -33,25 +27,25 @@
       }
 
       body {
-        background-color: var(--bg-color);
-        color: var(--text-main);
+        background-color: var(--bg);
+        color: var(--text);
         display: flex;
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        padding: 20px;
+        padding: 16px;
       }
 
       .calculator-container {
-        background-color: var(--card-bg);
+        background-color: var(--card);
         border-radius: 20px;
-        padding: 24px;
+        padding: 20px;
         box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
         width: 100%;
-        max-width: 440px;
+        max-width: 420px;
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 14px;
       }
 
       .top-bar {
@@ -59,56 +53,50 @@
         justify-content: space-between;
         align-items: center;
         font-size: 0.85rem;
-        color: var(--text-muted);
+        color: var(--muted);
       }
 
       .mode-toggle {
         background: #0f172a;
         border: 1px solid #334155;
-        color: var(--accent);
+        color: #38bdf8;
         padding: 4px 10px;
         border-radius: 12px;
         cursor: pointer;
         font-weight: 600;
-        transition: background-color 0.15s ease;
       }
 
       .display-container {
-        background-color: var(--display-bg);
+        background-color: var(--display);
         border-radius: 12px;
-        padding: 16px;
+        padding: 14px;
         text-align: right;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        height: 120px;
+        height: 110px;
         border: 1px solid #334155;
         overflow: hidden;
-        position: relative;
       }
 
       .history {
-        color: var(--text-muted);
-        font-size: 0.9rem;
-        height: 20px;
+        color: var(--muted);
+        font-size: 0.85rem;
+        height: 18px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
       }
 
       .current-input {
-        color: var(--text-main);
+        color: var(--text);
         font-weight: 600;
-        line-height: 1.2;
-        word-break: break-all;
-        overflow-wrap: break-word;
         display: flex;
         align-items: flex-end;
         justify-content: flex-end;
-        height: 70px;
+        height: 65px;
         width: 100%;
         overflow: hidden;
-        will-change: font-size;
       }
 
       .current-input span {
@@ -119,85 +107,99 @@
       }
 
       @keyframes staticGlitch {
-        0% { transform: translate(0, 0); filter: drop-shadow(0 0 2px #facc15); }
-        20% { transform: translate(-3px, 2px); filter: drop-shadow(0 0 8px #fef08a); color: #facc15; }
-        40% { transform: translate(3px, -2px); filter: drop-shadow(0 0 4px #ffffff); }
-        60% { transform: translate(-2px, -1px); filter: drop-shadow(0 0 10px #facc15); color: #fef08a; }
-        80% { transform: translate(2px, 3px); filter: drop-shadow(0 0 5px #ffffff); }
-        100% { transform: translate(0, 0); filter: drop-shadow(0 0 2px #facc15); }
+        0% {
+          transform: translate(0, 0);
+          filter: drop-shadow(0 0 2px #facc15);
+        }
+        50% {
+          transform: translate(-2px, 2px);
+          filter: drop-shadow(0 0 6px #fef08a);
+          color: #facc15;
+        }
+        100% {
+          transform: translate(0, 0);
+          filter: drop-shadow(0 0 2px #facc15);
+        }
       }
 
       .zap-glitch {
         animation: staticGlitch 0.1s ease infinite;
       }
 
-      /* Red Pulsing Animation for active red buttons */
-      @keyframes redPulse {
-        0% { transform: scale(1); background-color: #ef4444; }
-        50% { transform: scale(1.04); background-color: #dc2626; box-shadow: 0 0 12px rgba(239, 68, 68, 0.8); }
-        100% { transform: scale(1); background-color: #ef4444; }
+      @keyframes hardGlitchVibrate {
+        0% {
+          transform: translate(0, 0) scale(1.02);
+          background-color: #ef4444;
+        }
+        50% {
+          transform: translate(2px, -2px) scale(1.03);
+          background-color: #dc2626;
+          box-shadow: 0 0 8px rgba(239, 68, 68, 0.8);
+        }
+        100% {
+          transform: translate(0, 0) scale(1.02);
+          background-color: #ef4444;
+        }
       }
 
       .red-vibrate {
-        animation: redPulse 0.4s ease infinite;
+        animation: hardGlitchVibrate 0.12s ease infinite;
       }
 
       .buttons-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
-        gap: 10px;
+        gap: 8px;
       }
 
       button {
         border: none;
         border-radius: 10px;
-        padding: 14px 8px;
-        font-size: 1.1rem;
+        padding: 14px 6px;
+        font-size: 1.05rem;
         font-weight: 600;
-        color: var(--text-main);
+        color: var(--text);
         cursor: pointer;
-        transition:
-          background-color 0.15s ease,
-          transform 0.05s ease;
-        user-select: none;
         touch-action: manipulation;
+        user-select: none;
+        transition: transform 0.05s ease;
       }
 
       button:active {
-        transform: scale(0.96);
+        transform: scale(0.95);
       }
 
-      .btn-num { background-color: var(--btn-num); }
-      .btn-num:hover { background-color: var(--btn-num-hover); }
-      .btn-op { background-color: var(--btn-op); }
-      .btn-op:hover { background-color: var(--btn-op-hover); }
-      .btn-func { background-color: var(--btn-func); font-size: 0.95rem; }
-      .btn-func:hover { background-color: var(--btn-func-hover); }
-      .btn-action { background-color: var(--btn-action); }
-      .btn-action:hover { background-color: var(--btn-action-hover); }
-      .btn-equal { background-color: var(--btn-equal); grid-column: span 2; }
-      .btn-equal:hover { background-color: var(--btn-equal-hover); }
+      .btn-num {
+        background-color: var(--num);
+      }
+      .btn-op {
+        background-color: var(--op);
+      }
+      .btn-func {
+        background-color: var(--func);
+        font-size: 0.9rem;
+      }
+      .btn-action {
+        background-color: var(--action);
+      }
+      .btn-equal {
+        background-color: var(--equal);
+        grid-column: span 2;
+      }
 
       .footer-bar {
         display: flex;
         justify-content: flex-start;
-        margin-top: -4px;
       }
 
       .update-log-btn {
         background: transparent;
         border: 1px solid #334155;
-        color: var(--text-muted);
+        color: var(--muted);
         font-size: 0.75rem;
         padding: 4px 8px;
         border-radius: 8px;
         cursor: pointer;
-        transition: all 0.15s ease;
-      }
-
-      .update-log-btn:hover {
-        background-color: #334155;
-        color: var(--text-main);
       }
     </style>
   </head>
@@ -209,7 +211,7 @@
         <button class="mode-toggle" id="degRadBtn">DEG</button>
       </div>
 
-      <div class="display-container" id="displayContainer">
+      <div class="display-container">
         <div class="history" id="historyDisplay"></div>
         <div class="current-input"><span id="mainDisplay">0</span></div>
       </div>
@@ -252,7 +254,11 @@
       </div>
 
       <div class="footer-bar">
-        <button class="update-log-btn" id="updateLogBtn" onclick="openUpdateLog()">
+        <button
+          class="update-log-btn"
+          id="updateLogBtn"
+          onclick="openUpdateLog()"
+        >
           Update Log
         </button>
       </div>
@@ -264,13 +270,18 @@
       const fahhSound = new Audio("FahhSound.mp3");
       const mathsEditSound = new Audio("MathsEditSound.mp3");
       const zapSound = new Audio("ZapSound.mp3");
-      mathsEditSound.volume = 1.0;
-      zapSound.volume = 1.0;
 
       let isSoundLocked = false;
       let audioCtx = null;
-
       let updateLogBtn = document.getElementById("updateLogBtn");
+      let mainDisplay = document.getElementById("mainDisplay");
+      let historyDisplay = document.getElementById("historyDisplay");
+      let degRadBtn = document.getElementById("degRadBtn");
+
+      let currentInput = "0";
+      let history = "";
+      let isDeg = true;
+      let shouldResetDisplay = false;
 
       function resetAllButtonColors() {
         document.querySelectorAll(".buttons-grid button").forEach((b) => {
@@ -287,55 +298,43 @@
         isSoundLocked = false;
         resetAllButtonColors();
       };
-
       zapSound.onended = () => {
         isSoundLocked = false;
         resetAllButtonColors();
         mainDisplay.classList.remove("zap-glitch");
       };
 
-      function playFahhLoud() {
+      function playFahh() {
         if (isSoundLocked) return;
         if (!audioCtx) {
           audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          const source = audioCtx.createMediaElementSource(fahhSound);
-          let fahhGain = audioCtx.createGain();
-          fahhGain.gain.value = 3.0;
-          source.connect(fahhGain);
-          fahhGain.connect(audioCtx.destination);
+          let src = audioCtx.createMediaElementSource(fahhSound);
+          let gain = audioCtx.createGain();
+          gain.gain.value = 3.0;
+          src.connect(gain);
+          gain.connect(audioCtx.destination);
         }
-        if (audioCtx.state === "suspended") {
-          audioCtx.resume();
-        }
+        if (audioCtx.state === "suspended") audioCtx.resume();
         fahhSound.currentTime = 0;
-        fahhSound.play().catch((err) => console.log("Audio play error:", err));
+        fahhSound.play().catch(() => {});
       }
 
       function openUpdateLog() {
         if (isSoundLocked) return;
         equalSound.currentTime = 0;
-        equalSound.play().catch((err) => console.log("Audio play error:", err));
+        equalSound.play().catch(() => {});
         window.open("changelog.html", "_blank");
       }
 
-      let mainDisplay = document.getElementById("mainDisplay");
-      let historyDisplay = document.getElementById("historyDisplay");
-      let degRadBtn = document.getElementById("degRadBtn");
-
-      let currentInput = "0";
-      let history = "";
-      let isDeg = true;
-      let shouldResetDisplay = false;
-      let renderScheduled = false;
-
       degRadBtn.addEventListener("click", () => {
-        const isMathsEditPlaying = !mathsEditSound.paused && mathsEditSound.currentTime > 0 && !mathsEditSound.ended;
-        const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
-        if (isMathsEditPlaying || isZapPlaying) {
+        let isPlaying =
+          (!mathsEditSound.paused &&
+            mathsEditSound.currentTime > 0 &&
+            !mathsEditSound.ended) ||
+          (!zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended);
+        if (isPlaying) {
           degRadBtn.style.backgroundColor = "#ef4444";
           degRadBtn.classList.add("red-vibrate");
-          updateLogBtn.style.backgroundColor = "#ef4444";
-          updateLogBtn.classList.add("red-vibrate");
         }
         if (isSoundLocked) return;
         isDeg = !isDeg;
@@ -344,30 +343,30 @@
 
       function triggerButtonVisuals(btn) {
         if (!btn) return;
-        btn.style.transform = "scale(0.96)";
+        btn.style.transform = "scale(0.95)";
         setTimeout(() => {
           btn.style.transform = "";
-        }, 100);
+        }, 80);
 
-        const isMathsEditPlaying = !mathsEditSound.paused && mathsEditSound.currentTime > 0 && !mathsEditSound.ended;
-        const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
-        if (isMathsEditPlaying || isZapPlaying) {
+        let isPlaying =
+          (!mathsEditSound.paused &&
+            mathsEditSound.currentTime > 0 &&
+            !mathsEditSound.ended) ||
+          (!zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended);
+        if (isPlaying) {
           btn.style.backgroundColor = "#ef4444";
           btn.classList.add("red-vibrate");
-          updateLogBtn.style.backgroundColor = "#ef4444";
-          updateLogBtn.classList.add("red-vibrate");
-          degRadBtn.style.backgroundColor = "#ef4444";
-          degRadBtn.classList.add("red-vibrate");
         }
       }
 
       function findButtonByKey(key) {
-        const buttons = document.querySelectorAll(".buttons-grid button");
-        for (let btn of buttons) {
+        for (let btn of document.querySelectorAll(".buttons-grid button")) {
           let text = btn.textContent.trim();
           if ((key === "Enter" || key === "=") && text === "=") return btn;
-          if ((key === "*" || key === "x" || key === "X") && text === "×") return btn;
-          if (key === "/" && text === "÷") return btn;
+          if ((key === "*" || key === "x") && text === "×") return btn;
+          if ((key === "/" || key === "÷") && text === "÷") return btn;
+          if (key === "+" && text === "+") return btn;
+          if (key === "-" && text === "-") return btn;
           if (key === "Backspace" && text === "DEL") return btn;
           if (key === "Escape" && text === "AC") return btn;
           if (text === key) return btn;
@@ -376,14 +375,10 @@
       }
 
       document.addEventListener("click", (e) => {
-        const btn = e.target.closest("button");
+        let btn = e.target.closest("button");
         if (!btn) return;
-
         triggerButtonVisuals(btn);
-
-        if (btn.classList.contains("update-log-btn")) return;
-
-        if (isSoundLocked) return;
+        if (btn.classList.contains("update-log-btn") || isSoundLocked) return;
 
         if (btn.classList.contains("btn-equal")) {
           equalSound.currentTime = 0;
@@ -395,34 +390,33 @@
       });
 
       function adjustFontSize() {
-        let fontSize = 2.2;
-        mainDisplay.style.fontSize = fontSize + "rem";
-        while (mainDisplay.scrollHeight > 70 && fontSize > 0.7) {
-          fontSize -= 0.1;
-          mainDisplay.style.fontSize = fontSize + "rem";
+        let size = 2.2;
+        mainDisplay.style.fontSize = size + "rem";
+        while (mainDisplay.scrollHeight > 65 && size > 0.7) {
+          size -= 0.1;
+          mainDisplay.style.fontSize = size + "rem";
         }
       }
 
       function updateDisplay() {
-        if (renderScheduled) return;
-        renderScheduled = true;
         requestAnimationFrame(() => {
-          if (currentInput.includes("U.S. POLO") || currentInput.includes("TERMINAL") || currentInput.includes("ZAP")) {
+          if (
+            currentInput.includes("U.S. POLO") ||
+            currentInput.includes("ZAP")
+          ) {
             mainDisplay.innerHTML = currentInput;
           } else {
             mainDisplay.textContent = currentInput;
           }
           historyDisplay.textContent = history;
           adjustFontSize();
-          renderScheduled = false;
         });
       }
 
       function appendValue(val) {
         if (isSoundLocked) return;
         let parts = currentInput.split(/[\+\-\×\÷\^]/);
-        let currentNumber = parts[parts.length - 1];
-        if (currentNumber.length >= 60 && !shouldResetDisplay) return;
+        if (parts[parts.length - 1].length >= 16 && !shouldResetDisplay) return;
 
         if (val >= "0" && val <= "9") {
           clickSound.currentTime = 0;
@@ -439,11 +433,11 @@
       }
 
       function appendOp(op) {
-        if (isSoundLocked) return;
-        if (currentInput.length >= 60 && !shouldResetDisplay) return;
+        if (isSoundLocked || (currentInput.length >= 16 && !shouldResetDisplay))
+          return;
         if (shouldResetDisplay) shouldResetDisplay = false;
-        const lastChar = currentInput.slice(-1);
-        if (["+", "-", "×", "÷", "^"].includes(lastChar)) {
+        let last = currentInput.slice(-1);
+        if (["+", "-", "×", "÷", "^"].includes(last)) {
           currentInput = currentInput.slice(0, -1) + op;
         } else {
           currentInput += op;
@@ -452,8 +446,7 @@
       }
 
       function appendFunc(func) {
-        if (isSoundLocked) return;
-        if (currentInput.length + func.length + 1 >= 60 && !shouldResetDisplay)
+        if (isSoundLocked || (currentInput.length >= 16 && !shouldResetDisplay))
           return;
         if (currentInput === "0" || shouldResetDisplay) {
           currentInput = func + "(";
@@ -479,53 +472,36 @@
           clearAll();
           return;
         }
-        if (currentInput.length === 1) {
-          currentInput = "0";
-        } else {
-          currentInput = currentInput.slice(0, -1);
-        }
+        currentInput =
+          currentInput.length === 1 ? "0" : currentInput.slice(0, -1);
         updateDisplay();
       }
 
       function calculate() {
         if (isSoundLocked) return;
-
         if (shouldResetDisplay) {
-          currentInput = "0";
-          history = "";
-          shouldResetDisplay = false;
-          updateDisplay();
+          clearAll();
           return;
         }
 
         try {
-          let rawExpression = currentInput;
-          history = currentInput + " =";
-
-          let normalizedExpr = rawExpression
+          let raw = currentInput;
+          history = raw + " =";
+          let norm = raw
             .replace(/\s+/g, "")
             .replace(/×/g, "*")
             .replace(/÷/g, "/");
 
-          if (normalizedExpr === "67+69+420*17/9") {
-            let calcResult =
-              Math.round((67 + 69 + (420 * 17) / 9) * 1e10) / 1e10;
-            currentInput = `<span style="font-family: 'Georgia', serif; font-weight: bold; font-style: italic; letter-spacing: 1px; color: #f43f5e;">U.S. POLO (${calcResult})</span>`;
+          if (norm === "67+69+420*17/9") {
+            let res = Math.round((67 + 69 + (420 * 17) / 9) * 1e10) / 1e10;
+            currentInput = `<span style="font-family:'Georgia',serif;font-weight:bold;font-style:italic;color:#f43f5e;">U.S. POLO (${res})</span>`;
             shouldResetDisplay = true;
             updateDisplay();
             return;
           }
 
-          if (normalizedExpr === "e^pi-pi" || normalizedExpr === "e^π-π") {
-            let calcResult = Math.round((Math.E**Math.PI - Math.PI) * 1e10) / 1e10;
-            currentInput = `<span style="font-family: monospace; font-weight: bold; color: #22c55e; text-shadow: 0 0 10px rgba(34,197,94,0.6);">TERMINAL: ${calcResult}</span>`;
-            shouldResetDisplay = true;
-            updateDisplay();
-            return;
-          }
-
-          if (normalizedExpr === "1/0.00000001" || normalizedExpr === "1/1e-8") {
-            currentInput = `<span style="color: #facc15; font-weight: bold; text-shadow: 0 0 8px #fef08a;">⚡ ZAP! 100,000,000</span>`;
+          if (norm === "1/0.00000001" || norm === "1/1e-8") {
+            currentInput = `<span style="color:#facc15;font-weight:bold;text-shadow:0 0 8px #fef08a;">⚡ ZAP! 100,000,000</span>`;
             isSoundLocked = true;
             mainDisplay.classList.add("zap-glitch");
             zapSound.currentTime = 0;
@@ -538,48 +514,64 @@
             return;
           }
 
-          let expression = rawExpression
+          let expr = raw
             .replace(/π/g, "Math.PI")
             .replace(/e/g, "Math.E")
             .replace(/×/g, "*")
             .replace(/÷/g, "/")
             .replace(/\^/g, "**");
-
-          const angleMultiplier = isDeg ? "(Math.PI/180)*" : "";
-          expression = expression.replace(
+          let am = isDeg ? "(Math.PI/180)*" : "";
+          expr = expr.replace(
             /sin\(([^)]+)\)/g,
-            (m, p1) => `Math.sin(${angleMultiplier}${p1})`,
+            (m, p) => `Math.sin(${am}${p})`,
           );
-          expression = expression.replace(
+          expr = expr.replace(
             /cos\(([^)]+)\)/g,
-            (m, p1) => `Math.cos(${angleMultiplier}${p1})`,
+            (m, p) => `Math.cos(${am}${p})`,
           );
-          expression = expression.replace(
+          expr = expr.replace(
             /tan\(([^)]+)\)/g,
-            (m, p1) => `Math.tan(${angleMultiplier}${p1})`,
+            (m, p) => `Math.tan(${am}${p})`,
           );
-          expression = expression.replace(/sqrt\(([^)]+)\)/g, "Math.sqrt($1)");
-          expression = expression.replace(/log\(([^)]+)\)/g, "Math.log10($1)");
-          expression = expression.replace(/ln\(([^)]+)\)/g, "Math.log($1)");
+          expr = expr.replace(/sqrt\(([^)]+)\)/g, "Math.sqrt($1)");
+          expr = expr.replace(/log\(([^)]+)\)/g, "Math.log10($1)");
+          expr = expr.replace(/ln\(([^)]+)\)/g, "Math.log($1)");
 
-          let result = Function('"use strict"; return (' + expression + ")")();
+          let res = Function('"use strict"; return (' + expr + ")")();
 
-          if (typeof result === "number" && !isNaN(result)) {
-            if (!isFinite(result)) {
-              currentInput = result > 0 ? "Infinity" : "-Infinity";
+          if (typeof res === "number" && !isNaN(res)) {
+            if (!isFinite(res)) {
+              currentInput = res > 0 ? "Infinity" : "-Infinity";
               isSoundLocked = true;
               mathsEditSound.currentTime = 0;
               mathsEditSound.play().catch(() => {
                 isSoundLocked = false;
               });
             } else {
-              result = Math.round(result * 1e10) / 1e10;
-              currentInput = result.toString();
+              currentInput = (Math.round(res * 1e10) / 1e10).toString();
             }
           } else {
             currentInput = "Error";
-            playFahhLoud();
+            playFahh();
           }
         } catch (err) {
           currentInput = "Error";
-          playFahhLoud();
+          playFahh();
+        }
+
+        shouldResetDisplay = true;
+        updateDisplay();
+      }
+
+      document.addEventListener("keydown", (e) => {
+        let btn = findButtonByKey(e.key);
+        if (btn) {
+          triggerButtonVisuals(btn);
+          if (isSoundLocked) return;
+          btn.click();
+          e.preventDefault();
+        }
+      });
+    </script>
+  </body>
+</html>
