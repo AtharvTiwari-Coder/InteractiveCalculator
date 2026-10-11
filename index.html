@@ -241,7 +241,7 @@
       </div>
 
       <div class="footer-bar">
-        <button class="update-log-btn" onclick="openUpdateLog()">
+        <button class="update-log-btn" id="updateLogBtn" onclick="openUpdateLog()">
           Update Log
         </button>
       </div>
@@ -259,11 +259,14 @@
       let isSoundLocked = false;
       let audioCtx = null;
 
+      let updateLogBtn = document.getElementById("updateLogBtn");
+
       function resetAllButtonColors() {
         document.querySelectorAll(".buttons-grid button").forEach((b) => {
           b.style.backgroundColor = "";
         });
         degRadBtn.style.backgroundColor = "";
+        updateLogBtn.style.backgroundColor = "";
       }
 
       mathsEditSound.onended = () => {
@@ -316,6 +319,7 @@
         const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
         if (isMathsEditPlaying || isZapPlaying) {
           degRadBtn.style.backgroundColor = "#ef4444";
+          updateLogBtn.style.backgroundColor = "#ef4444";
         }
         if (isSoundLocked) return;
         isDeg = !isDeg;
@@ -333,6 +337,7 @@
         const isZapPlaying = !zapSound.paused && zapSound.currentTime > 0 && !zapSound.ended;
         if (isMathsEditPlaying || isZapPlaying) {
           btn.style.backgroundColor = "#ef4444";
+          updateLogBtn.style.backgroundColor = "#ef4444";
         }
       }
 
@@ -352,9 +357,11 @@
 
       document.addEventListener("click", (e) => {
         const btn = e.target.closest("button");
-        if (!btn || btn.classList.contains("update-log-btn")) return;
+        if (!btn) return;
 
         triggerButtonVisuals(btn);
+
+        if (btn.classList.contains("update-log-btn")) return;
 
         if (isSoundLocked) return;
 
@@ -463,7 +470,6 @@
       function calculate() {
         if (isSoundLocked) return;
 
-        // If a result is already showing and user presses '=', reset to 0 instead of re-evaluating
         if (shouldResetDisplay) {
           currentInput = "0";
           history = "";
